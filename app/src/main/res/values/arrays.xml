@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_units_options">
+        <item>@string/pref_units_label_cm</item>
+        <item>@string/pref_units_label_km</item>
+        <item>@string/pref_units_label_m</item>
+        <item>@string/pref_units_label_in</item>
+        <item>@string/pref_units_label_miles</item>
+        <item>@string/pref_units_label_yards</item>
+    </string-array>
+
+    <string-array name="pref_units_values">
+        <item>@string/pref_units_cm</item>
+        <item>@string/pref_units_m</item>
+        <item>@string/pref_units_km</item>
+        <item>@string/pref_units_in</item>
+        <item>@string/pref_units_miles</item>
+        <item>@string/pref_units_yards</item>
+    </string-array>
+
+</resources>
