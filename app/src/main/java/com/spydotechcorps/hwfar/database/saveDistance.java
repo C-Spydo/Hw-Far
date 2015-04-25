@@ -4,9 +4,9 @@ package com.spydotechcorps.hwfar.database;
  * Created by INGENIO on 3/8/2015.
  */
 public class saveDistance {
-    private int _id;
-    private String _desc;
-    private String _distance;
+    public int _id;
+    public String _desc;
+    public String _distance;
 
     public void Distances() {
 
@@ -17,8 +17,10 @@ public class saveDistance {
         this._desc = desc;
         this._distance = distance;
     }*/
-
-    public void Distances(String desc, String distance) {
+    public void Distances(
+            //int k,
+        String desc, String distance) {
+        //this._id=1;
         this._desc = desc;
         this._distance = distance;
     }
@@ -49,3 +51,5 @@ public class saveDistance {
 
 
 }
+
+

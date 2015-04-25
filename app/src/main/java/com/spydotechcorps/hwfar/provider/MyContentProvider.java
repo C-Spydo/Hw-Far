@@ -13,27 +13,34 @@ import com.spydotechcorps.hwfar.database.Dbhandler;
 
 public class MyContentProvider extends ContentProvider{
 
+    private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private Dbhandler myDB;
+    public static final int DISTANCES = 1;
+    public static final int DISTANCES_ID = 2;
+
     @Override
     public boolean onCreate() {
-        myDB = new Dbhandler(getContext(), null, null, 1);
-        return false;
+        myDB = new Dbhandler(getContext());
+                //getContext(), null, null, 1);
+        return true;
     }
 
 
     private static final String AUTHORITY =
-        "com.spydotechcorps.hwfar.provider;.MyContentProvider";
-private static final String DISTANCES_TABLE = "distances";
-public static final Uri CONTENT_URI =
-        Uri.parse("content://" + AUTHORITY + "/" + DISTANCES_TABLE);
-    public static final int DISTANCES = 1;
-    public static final int DISTANCES_ID = 2;
-    private static final UriMatcher sURIMatcher =
-            new UriMatcher(UriMatcher.NO_MATCH);
+            // i think there is an error, here, my authority is a bit wrong.
+            "com.spydotechcorps.hwfar.provider.MyContentProvider";
+       // "com.spydotechcorps.hwfar.provider;.MyContentProvider";
+    private static final String DISTANCES_TABLE = "distances";
+    public static final Uri BASE_URI =
+        Uri.parse("content://" + AUTHORITY);
+    public static final Uri CONTENT_URI=Uri.withAppendedPath(BASE_URI, Dbhandler.TABLE_DISTANCES);
+
+
+
 
     static {
-        sURIMatcher.addURI(AUTHORITY, DISTANCES_TABLE, DISTANCES);
-        sURIMatcher.addURI(AUTHORITY, DISTANCES_TABLE + "/#",
+        sURIMatcher.addURI(AUTHORITY, Dbhandler.TABLE_DISTANCES, DISTANCES);
+        sURIMatcher.addURI(AUTHORITY, Dbhandler.TABLE_DISTANCES + "/#",
                 DISTANCES_ID);
     }
 
@@ -88,8 +95,10 @@ public static final Uri CONTENT_URI =
 
         SQLiteDatabase sqlDB = myDB.getWritableDatabase();
 
-        long id = 0;
-        switch (uriType) {
+        long _id = 0;
+        _id = sqlDB.insert(Dbhandler.TABLE_DISTANCES,
+                null, values);
+       /* switch (uriType) {
             case DISTANCES:
                 id = sqlDB.insert(Dbhandler.TABLE_DISTANCES,
                         null, values);
@@ -97,9 +106,9 @@ public static final Uri CONTENT_URI =
             default:
                 throw new IllegalArgumentException("Unknown URI: "
                         + uri);
-        }
+        }*/
         getContext().getContentResolver().notifyChange(uri, null);
-        return Uri.parse(DISTANCES_TABLE + "/" + id);
+        return Uri.parse(DISTANCES_TABLE + "/" + _id);
 
     }
 
@@ -116,7 +125,6 @@ public static final Uri CONTENT_URI =
         queryBuilder.setTables(Dbhandler.TABLE_DISTANCES);
 
         int uriType = sURIMatcher.match(uri);
-
         switch (uriType) {
             case DISTANCES_ID:
                 queryBuilder.appendWhere(Dbhandler.COLUMN_ID + "="
@@ -127,12 +135,12 @@ public static final Uri CONTENT_URI =
             default:
                 throw new IllegalArgumentException("Unknown URI");
         }
-
         Cursor cursor = queryBuilder.query(myDB.getReadableDatabase(),
                 projection, selection, selectionArgs, null, null,
                 sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(),
                 uri);
+
         return cursor;
 
     }

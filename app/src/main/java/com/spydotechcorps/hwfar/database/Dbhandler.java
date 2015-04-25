@@ -8,37 +8,48 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.spydotechcorps.hwfar.provider.MyContentProvider;
+
 /**
  * Created by INGENIO on 3/8/2015.
  */
+
+
+
 
 public class Dbhandler extends SQLiteOpenHelper {
 
 
     private ContentResolver myCR;
 
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "distanceDB.db";
-    public static final String TABLE_DISTANCES = "distances";
+    private static  int DATABASE_VERSION = 2;
+    private static String DATABASE_NAME = "distanceDB.db";
+    public static  String TABLE_DISTANCES = "distances";
 
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_DESCRIPTION = "description";
-    public static final String COLUMN_DISTANCE = "distance";
+    public static final String COLUMN_ID ="_id";
+    public static final String COLUMN_DESCRIPTION = "COLUMN_DESCRIPTION";
+    public static final String COLUMN_DISTANCE = "COLUMN_DISTANCE";
 
-    public Dbhandler(Context context, String name,
-                       SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+
+    public Dbhandler(Context context
+            //, String name,
+                       //SQLiteDatabase.CursorFactory factory, int version
+                       ) {
+        super(context, DATABASE_NAME,
+                //factory
+                null, DATABASE_VERSION);
         myCR = context.getContentResolver();    // obtaining reference to content resolver in content provider
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " +
+        String CREATE_DISTANCES_TABLE = "CREATE TABLE " +
                 TABLE_DISTANCES + "("
-                + COLUMN_ID + " INTEGER PRIMARY KEY," + COLUMN_DESCRIPTION
-                + " TEXT," + COLUMN_DISTANCE + " INTEGER" + ")";
-        db.execSQL(CREATE_PRODUCTS_TABLE);
+                +
+                COLUMN_ID +
+                " _id INTEGER PRIMARY KEY," + COLUMN_DESCRIPTION
+                + " TEXT," + COLUMN_DISTANCE + " REAL" + ")";
+        db.execSQL(CREATE_DISTANCES_TABLE);
 
 
     }
@@ -52,9 +63,10 @@ public class Dbhandler extends SQLiteOpenHelper {
     }
 
 
-    public void addDistances(String a,String b) {
+    public void addDistances(int c,String a,String b) {
 
         ContentValues values = new ContentValues();
+        values.put(COLUMN_ID,c);
         values.put(COLUMN_DESCRIPTION, a);
         values.put(COLUMN_DISTANCE, b);
 
@@ -62,7 +74,8 @@ public class Dbhandler extends SQLiteOpenHelper {
     }
 
     public saveDistance findDistances(String Distancesname) {
-        String[] projection = {COLUMN_ID,
+        String[] projection = {
+                COLUMN_ID,
                 COLUMN_DESCRIPTION, COLUMN_DISTANCE };
 
         String selection = "Distancesname = \"" + Distancesname + "\"";
@@ -103,6 +116,9 @@ public class Dbhandler extends SQLiteOpenHelper {
 
 
 }
+
+
+
 
 
 

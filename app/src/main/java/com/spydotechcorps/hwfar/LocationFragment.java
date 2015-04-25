@@ -15,6 +15,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -195,19 +196,38 @@ public class LocationFragment extends Fragment {
 
    // @Override
     public void newsave (View rootView) {
-        final Dbhandler dbHandler = new Dbhandler(this.getActivity(), null, null, 1);
+        final Dbhandler dbHandler = new Dbhandler(this.getActivity());
+                //, null, null, 1);
 
-                if (result2.getText().toString()=="") {
-                    Toast.makeText(getActivity(), "There is nothing to Save", Toast.LENGTH_SHORT).show();
-                }
-        else {
+              //  if (result2.getText().toString()=="") {
+                //    Toast.makeText(getActivity(), "There is nothing to Save", Toast.LENGTH_SHORT).show();
+                //}
+                //else {
                         final String distance = (result2.getText().toString());
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+                   /* AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+                    builder.setTitle("Description");
+                    AlertDialog alertToShow=builder.create();
+                    alertToShow.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);*/
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+                    builder.setTitle("Description");
+                    final AlertDialog dialog =builder.create();
+
+                        /*AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
                         builder.setTitle("Description");
+                        */
 
                         // Set up the input
                         final EditText input = new EditText(this.getActivity());
+                        input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus) {
+                                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                            }
+                        }
+                    });
                         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                         input.setInputType(InputType.TYPE_CLASS_TEXT);
                         builder.setView(input);
@@ -221,11 +241,12 @@ public class LocationFragment extends Fragment {
                                 String ddesc = m_Text;
                                 //saveDistance distances = new saveDistance(ddesc,distance);
                                 try {
-                                    dbHandler.addDistances(ddesc, distance);
+                                    dbHandler.addDistances(1,ddesc, distance);
+                                    Toast.makeText(getActivity(), "Save Successful", Toast.LENGTH_LONG).show();
                                 } catch (Exception e) {
-                                    //Toast.makeText()
+                                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                                 }
-                                //Toast.makeText(LocationFragment.this, "Save Successfull", Toast.LENGTH_LONG).show();
+
                             }
                         });
                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -234,9 +255,9 @@ public class LocationFragment extends Fragment {
                                 dialog.cancel();
                             }
                         });
-
+                        //alertToShow.show();
                         builder.show();
-                    }
+                  //  }
 
 
 
