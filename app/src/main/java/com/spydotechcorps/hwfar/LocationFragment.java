@@ -1,6 +1,8 @@
 package com.spydotechcorps.hwfar;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -12,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,18 +25,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.spydotechcorps.hwfar.database.Dbhandler;
+import com.spydotechcorps.hwfar.provider.MyContentProvider;
 
 
 public class LocationFragment extends Fragment {
     protected LocationManager locationManager;
     //private int someStateValue;
-    TextView result2;
+   // TextView result2;
     private String data1;
    // protected Button point1;
    // protected Button point2;
     Location location1;
     Location location2;
     private String m_Text = "";
+    private TextView result;
+
+    private ContentResolver contentResolver;
 
     public LocationFragment() {
     }
@@ -73,7 +80,7 @@ public class LocationFragment extends Fragment {
         Button point2 = (Button) rootView.findViewById(R.id.point2);
         Button Go= (Button) rootView.findViewById(R.id.gobutton);
         Button btnSave= (Button) rootView.findViewById(R.id.btnSave);
-        final TextView result =(TextView) rootView.findViewById(R.id.txtResult);
+        result =(TextView) rootView.findViewById(R.id.txtResult);
         final TextView coord1 =(TextView) rootView.findViewById(R.id.coord1);
         final TextView coord2 =(TextView) rootView.findViewById(R.id.coord2);
         final TextView tv2 =(TextView) rootView.findViewById(R.id.textView2);
@@ -181,14 +188,9 @@ public class LocationFragment extends Fragment {
                 newsave(rootView);
             }
 
-
-
-
-
-
         });
 
-         result2 =(TextView) rootView.findViewById(R.id.txtResult);
+
 
         return rootView;
     }
@@ -203,7 +205,8 @@ public class LocationFragment extends Fragment {
                 //    Toast.makeText(getActivity(), "There is nothing to Save", Toast.LENGTH_SHORT).show();
                 //}
                 //else {
-                        final String distance = (result2.getText().toString());
+                        final String distance = result.getText().toString();
+
 
                    /* AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
                     builder.setTitle("Description");
@@ -241,9 +244,19 @@ public class LocationFragment extends Fragment {
                                 String ddesc = m_Text;
                                 //saveDistance distances = new saveDistance(ddesc,distance);
                                 try {
-                                    dbHandler.addDistances(1,ddesc, distance);
+                                    //will consider the below but am scared it dosent look good
+                                    //dbHandler.addDistances(1,ddesc, distance);
+                                    ContentValues values = new ContentValues();
+                                    contentResolver = getActivity().getContentResolver();
+                                    values.put(Dbhandler.COLUMN_DESCRIPTION, ddesc);
+
+                                    values.put(Dbhandler.COLUMN_DISTANCE, distance);
+
+                                    contentResolver.insert(MyContentProvider.CONTENT_URI, values);
+
                                     Toast.makeText(getActivity(), "Save Successful", Toast.LENGTH_LONG).show();
                                 } catch (Exception e) {
+                                    Log.d("Error", e.toString());
                                     Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                                 }
 

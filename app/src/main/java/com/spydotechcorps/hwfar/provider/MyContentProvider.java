@@ -1,6 +1,7 @@
 package com.spydotechcorps.hwfar.provider;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -18,6 +19,27 @@ public class MyContentProvider extends ContentProvider{
     public static final int DISTANCES = 1;
     public static final int DISTANCES_ID = 2;
 
+
+    private static final String AUTHORITY =
+            // i think there is an error, here, my authority is a bit wrong.
+            "com.spydotechcorps.hwfar.provider.mycontentprovider";
+    // "com.spydotechcorps.hwfar.provider;.MyContentProvider";
+    private static final String DISTANCES_TABLE = "distances";
+    public static final Uri BASE_URI =
+            Uri.parse("content://" + AUTHORITY);
+    public static final Uri CONTENT_URI=Uri.withAppendedPath(BASE_URI, Dbhandler.TABLE_DISTANCES);
+    //the above is still fine...okay?
+    public static Uri CONTENT_URI_ME = Uri.parse("content://" + AUTHORITY + "/" +DISTANCES_TABLE);
+
+
+
+
+    static {
+        sURIMatcher.addURI(AUTHORITY, DISTANCES_TABLE, DISTANCES);
+        sURIMatcher.addURI(AUTHORITY, DISTANCES_TABLE + "/#",
+                DISTANCES_ID);
+    }
+
     @Override
     public boolean onCreate() {
         myDB = new Dbhandler(getContext());
@@ -26,23 +48,7 @@ public class MyContentProvider extends ContentProvider{
     }
 
 
-    private static final String AUTHORITY =
-            // i think there is an error, here, my authority is a bit wrong.
-            "com.spydotechcorps.hwfar.provider.MyContentProvider";
-       // "com.spydotechcorps.hwfar.provider;.MyContentProvider";
-    private static final String DISTANCES_TABLE = "distances";
-    public static final Uri BASE_URI =
-        Uri.parse("content://" + AUTHORITY);
-    public static final Uri CONTENT_URI=Uri.withAppendedPath(BASE_URI, Dbhandler.TABLE_DISTANCES);
 
-
-
-
-    static {
-        sURIMatcher.addURI(AUTHORITY, Dbhandler.TABLE_DISTANCES, DISTANCES);
-        sURIMatcher.addURI(AUTHORITY, Dbhandler.TABLE_DISTANCES + "/#",
-                DISTANCES_ID);
-    }
 
     public MyContentProvider() {
     }
@@ -91,7 +97,6 @@ public class MyContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         // TODO: Implement this to handle requests to insert a new row.
-        int uriType = sURIMatcher.match(uri);
 
         SQLiteDatabase sqlDB = myDB.getWritableDatabase();
 
@@ -108,7 +113,8 @@ public class MyContentProvider extends ContentProvider{
                         + uri);
         }*/
         getContext().getContentResolver().notifyChange(uri, null);
-        return Uri.parse(DISTANCES_TABLE + "/" + _id);
+        return ContentUris.withAppendedId(uri,_id);
+        //return Uri.parse(DISTANCES_TABLE + "/" + _id);
 
     }
 

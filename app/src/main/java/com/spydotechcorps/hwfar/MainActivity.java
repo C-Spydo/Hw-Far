@@ -107,7 +107,8 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_viewRecords) {
-            startActivity(new Intent(this, ViewActivity.class));
+            Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+           startActivity(intent);
             return true;
         }
        /* if (id == R.id.menu_share) {

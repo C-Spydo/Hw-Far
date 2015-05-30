@@ -53,10 +53,11 @@
         </activity>
 
         <provider
-            android:name=".provider.MyContentProvider"
-            android:authorities="com.spydotechcorps.hwfar.provider.MyContentProvider"
+            android:name="com.spydotechcorps.hwfar.provider.MyContentProvider"
+            android:authorities="com.spydotechcorps.hwfar.provider.mycontentprovider"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true"
+            android:multiprocess="true">
         </provider>
 
         <activity
@@ -66,6 +67,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.spydotechcorps.hwfar.MainActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <!--<activity
             android:name=".RecActivity"

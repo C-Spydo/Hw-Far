@@ -21,13 +21,19 @@ public class Dbhandler extends SQLiteOpenHelper {
 
     private ContentResolver myCR;
 
-    private static  int DATABASE_VERSION = 2;
+    private static  int DATABASE_VERSION = 1;
     private static String DATABASE_NAME = "distanceDB.db";
     public static  String TABLE_DISTANCES = "distances";
 
     public static final String COLUMN_ID ="_id";
     public static final String COLUMN_DESCRIPTION = "COLUMN_DESCRIPTION";
     public static final String COLUMN_DISTANCE = "COLUMN_DISTANCE";
+    private String CREATE_DISTANCES_TABLE = "CREATE TABLE " +
+            TABLE_DISTANCES + "("
+            +
+            COLUMN_ID +
+            " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_DESCRIPTION
+            + " TEXT NOT NULL," + COLUMN_DISTANCE + " TEXT NOT NULL" + ")";
 
 
     public Dbhandler(Context context
@@ -37,18 +43,13 @@ public class Dbhandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME,
                 //factory
                 null, DATABASE_VERSION);
-        myCR = context.getContentResolver();    // obtaining reference to content resolver in content provider
+       // myCR = context.getContentResolver();    // obtaining reference to content resolver in content provider
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_DISTANCES_TABLE = "CREATE TABLE " +
-                TABLE_DISTANCES + "("
-                +
-                COLUMN_ID +
-                " _id INTEGER PRIMARY KEY," + COLUMN_DESCRIPTION
-                + " TEXT," + COLUMN_DISTANCE + " REAL" + ")";
+
         db.execSQL(CREATE_DISTANCES_TABLE);
 
 

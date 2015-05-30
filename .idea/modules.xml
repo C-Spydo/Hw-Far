@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HwFar.iml" filepath="$PROJECT_DIR$/HwFar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HwFar(mod).iml" filepath="$PROJECT_DIR$/HwFar(mod).iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

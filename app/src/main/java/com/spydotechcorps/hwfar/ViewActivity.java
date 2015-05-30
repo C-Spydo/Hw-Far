@@ -1,5 +1,6 @@
 package com.spydotechcorps.hwfar;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -20,14 +21,20 @@ public class ViewActivity extends FragmentActivity {
     public SimpleCursorAdapter myCursorAdapter;
     public static final int DISTANCES_LOADER_ID = 212;
     private static String TAG="CursorLoader";
+    private ContentResolver contentResolver;
+    private  ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // ...
         setContentView(R.layout.fragment_view);
+       listView = (ListView) findViewById(R.id.listview_records);
         setupCursorAdapter();
-        getSupportLoaderManager().initLoader(DISTANCES_LOADER_ID,
-                new Bundle(), distancesLoader);
+
+
+        //for now abeg
+       // getSupportLoaderManager().initLoader(DISTANCES_LOADER_ID,
+                //new Bundle(), distancesLoader);
 
            // defining listview and linking listview to the cursor adapter
         //note: cursor adapter is being used here instead of array adapter because the data to be displayed
@@ -41,20 +48,43 @@ public class ViewActivity extends FragmentActivity {
         String[] uiBindFrom = { Dbhandler.COLUMN_DESCRIPTION, Dbhandler.COLUMN_DISTANCE
                  };
         // View IDs which will have the respective column data inserted
-        int[] uiBindTo = {android.R.id.text1, android.R.id.text2  };
+       // int[] uiBindTo = {android.R.id.text1, android.R.id.text2  };
+        //use a custom defined textviews instead
+        int[] uiBindTo = {R.id.description, R.id.location };
         // Create the simple cursor adapter to use for our list
         // specifying the template to inflate (item_contact),
 
         //modifying template to reflect my initial code here
-        myCursorAdapter = new SimpleCursorAdapter(
+       /* myCursorAdapter = new SimpleCursorAdapter(
                 this, android.R.layout.simple_list_item_2,
                 null, uiBindFrom, uiBindTo,
-                0);
+                0);*/
+        //use the below instead
+        String[] projection = { Dbhandler.COLUMN_ID,Dbhandler.COLUMN_DESCRIPTION, Dbhandler.COLUMN_DISTANCE };
+        contentResolver = getContentResolver();
+        Cursor cursor = contentResolver.query(MyContentProvider.CONTENT_URI,projection,null,null,null);
+        if(cursor == null){
+            Log.d("Gush", "Cursor returned null");
 
-        ListView listView = (ListView) findViewById(R.id.listview_records);
+        }else
+        if(cursor.getCount() < 1){
+            Toast.makeText(getApplicationContext(),"Data retrieve not successful", Toast.LENGTH_LONG).show();
 
-      //
-       if (myCursorAdapter!=null) {
+        }else
+         {
+            myCursorAdapter = new SimpleCursorAdapter(
+                    this, R.layout.list_item,
+                    cursor, uiBindFrom, uiBindTo, 0);
+            try {
+                listView.setAdapter(myCursorAdapter);
+            } catch (Exception e) {
+               Log.d("Error","Ouch, could not populate list view");
+            }
+        }
+
+
+      //not useful
+      /* if (myCursorAdapter!=null) {
            try {
                listView.setAdapter(myCursorAdapter);
            } catch (Exception lanre) {
@@ -63,7 +93,7 @@ public class ViewActivity extends FragmentActivity {
        }
         else{
                 Toast.makeText(getApplicationContext(), "There is nothing to View", Toast.LENGTH_SHORT).show();
-       }
+       }*/
 
     }
     //---------------------------------------------------------------------------------------------------

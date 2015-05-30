@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView6" />
     <ListView
-        style="@style/RecordListStyle"
+
         android:id="@+id/listview_records"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
